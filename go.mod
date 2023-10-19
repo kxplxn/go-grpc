@@ -1,1 +1,3 @@
-module github.com/kxplxn/learning_grpc-in-go
+module github.com/kxplxn/learning_go-grpc
+
+go 1.21.3
