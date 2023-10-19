@@ -18,7 +18,7 @@ enum RideType {
 message StartRequest {
   string id = 1;
   string driver_id = 2;
-  string location = 3;
+  Location location = 3;
   repeated string passenger_ids = 4;
   google.protobuf.Timestamp time = 5;
   RideType type = 6;
