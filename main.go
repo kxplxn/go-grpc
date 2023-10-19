@@ -3,10 +3,12 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/kxplxn/learning_go-grpc/pb"
 
 	"github.com/golang/protobuf/proto"
+	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -34,4 +36,16 @@ func main() {
 		log.Fatalf("error: %s", err)
 	}
 	fmt.Println(&req2)
+
+	fmt.Printf("proto size: %d\n", len(data))
+
+	jData, err := protojson.Marshal(&req)
+	if err != nil {
+		log.Fatalf("error: %s", err)
+	}
+	fmt.Printf("json size: %d\n", len(jData))
+
+	if _, err := os.Stdout.Write(jData); err != nil {
+		log.Fatalf("error: %s", err)
+	}
 }
