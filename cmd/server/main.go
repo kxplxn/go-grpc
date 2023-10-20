@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	addr := ":8000"
+	addr := ":9292"
 
 	// create a TCP listener on given port
 	lis, err := net.Listen("tcp", addr)
