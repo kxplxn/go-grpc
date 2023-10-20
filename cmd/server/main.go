@@ -46,3 +46,9 @@ func (r *Rides) Start(
 	// TODO: work
 	return &resp, nil
 }
+
+func (r *Rides) End(
+	ctx context.Context, req *pb.EndRequest,
+) (*pb.EndResponse, error) {
+	return &pb.EndResponse{Id: req.Id}, nil
+}
