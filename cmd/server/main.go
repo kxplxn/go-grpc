@@ -8,7 +8,10 @@ import (
 	"github.com/kxplxn/learning_go-grpc/pb"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/reflection"
+	"google.golang.org/grpc/status"
 )
 
 func main() {
@@ -36,15 +39,15 @@ type Rides struct {
 }
 
 func (r *Rides) Start(
-	_ context.Context, req *pb.StartRequest,
+	ctx context.Context, req *pb.StartRequest,
 ) (*pb.StartResponse, error) {
-	// TODO: validate req
-	resp := pb.StartResponse{
-		Id: req.Id,
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return nil, status.Errorf(codes.Unauthenticated, "no metadata")
 	}
+	log.Printf("info: api_key - %s", md["api_key"])
 
-	// TODO: work
-	return &resp, nil
+	return &pb.StartResponse{Id: req.Id}, nil
 }
 
 func (r *Rides) End(

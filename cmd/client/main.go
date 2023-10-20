@@ -7,10 +7,11 @@ import (
 	"time"
 
 	"github.com/kxplxn/learning_go-grpc/pb"
-	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func main() {
@@ -48,6 +49,7 @@ func main() {
 
 	ctx, cancel = context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
+	ctx = metadata.AppendToOutgoingContext(ctx, "api_key", "s3cr3t")
 	resp, err := c.Start(ctx, &req)
 	if err != nil {
 		log.Fatalf("error: %s", err)
