@@ -36,7 +36,7 @@ type Rides struct {
 }
 
 func (r *Rides) Start(
-	ctx context.Context, req *pb.StartRequest,
+	_ context.Context, req *pb.StartRequest,
 ) (*pb.StartResponse, error) {
 	// TODO: validate req
 	resp := pb.StartResponse{
@@ -48,7 +48,7 @@ func (r *Rides) Start(
 }
 
 func (r *Rides) End(
-	ctx context.Context, req *pb.EndRequest,
+	_ context.Context, req *pb.EndRequest,
 ) (*pb.EndResponse, error) {
 	return &pb.EndResponse{Id: req.Id}, nil
 }
