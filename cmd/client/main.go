@@ -55,4 +55,16 @@ func main() {
 		log.Fatalf("error: %s", err)
 	}
 	fmt.Println(resp)
+
+	ctx, cancel = context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	respEnd, err := c.End(ctx, &pb.EndRequest{
+		Id:       "47a74960d6204a52b1bece53221eb458",
+		End:      timestamppb.Now(),
+		Distance: 21.32,
+	})
+	if err != nil {
+		log.Fatalf("error: %s", err)
+	}
+	fmt.Println(respEnd)
 }
