@@ -6,9 +6,9 @@ import (
 	"io"
 	"log"
 	"net"
+	"time"
 
 	"github.com/kxplxn/learning_go-grpc/pb"
-
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -25,7 +25,9 @@ func main() {
 		log.Fatalf("error: can't listen - %s", err)
 	}
 
-	srv := grpc.NewServer()
+	srv := grpc.NewServer(
+		grpc.UnaryInterceptor(timingInterceptor),
+	)
 	var u Rides
 	pb.RegisterRidesServer(srv, &u)
 	reflection.Register(srv)
@@ -40,7 +42,7 @@ type Rides struct {
 	pb.UnimplementedRidesServer
 }
 
-func (r *Rides) Start(
+func (*Rides) Start(
 	ctx context.Context, req *pb.StartRequest,
 ) (*pb.StartResponse, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
@@ -52,13 +54,13 @@ func (r *Rides) Start(
 	return &pb.StartResponse{Id: req.Id}, nil
 }
 
-func (r *Rides) End(
+func (*Rides) End(
 	_ context.Context, req *pb.EndRequest,
 ) (*pb.EndResponse, error) {
 	return &pb.EndResponse{Id: req.Id}, nil
 }
 
-func (c *Rides) Location(stream pb.Rides_LocationServer) error {
+func (*Rides) Location(stream pb.Rides_LocationServer) error {
 	count := int64(0)
 	driverID := ""
 
@@ -82,4 +84,19 @@ func (c *Rides) Location(stream pb.Rides_LocationServer) error {
 		Count:    count,
 	}
 	return stream.SendAndClose(&resp)
+}
+
+func timingInterceptor(
+	ctx context.Context,
+	req any,
+	info *grpc.UnaryServerInfo,
+	handler grpc.UnaryHandler,
+) (any, error) {
+	start := time.Now()
+	defer func() {
+		duration := time.Since(start)
+		log.Printf("info: %s took %s", info.FullMethod, duration)
+	}()
+
+	return handler(ctx, req)
 }
