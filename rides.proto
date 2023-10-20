@@ -30,7 +30,7 @@ message StartResponse {
 
 message EndRequest {
   string id = 1;
-  google.protobuf.Timestamp end = 2;
+  google.protobuf.Timestamp time = 2;
   double distance = 3;
 }
 
